@@ -1,15 +1,17 @@
 #include "squaremtx.cpp"
+#include "list.cpp"
 
 int main(){
-    int size;
+    // EJ 1
+    cout << "Ejercicio 1:" << endl;
+    int size=3;
     cout << "Enter the size of the matrix: ";
-    cin >> size;
-    vector<int> mtx=create_mtx(size);
+    //cin >> size;
+    vector<vector<int>> mtx=create_mtx(size);
     print_mtx(mtx, size);
-    cout << "The matrix has been created successfully!" << endl;
-    cout << mtx[6] << endl;
 
-    // node_t *nodo = create_node(5);
-    // cout << nodo->value << endl;
+    // Ej 3
+    cout << endl <<  "Ejercicio 3:" << endl;
+    // Falta hacer main
     return 0;
-}
+  }
