@@ -8,7 +8,6 @@ bool str_comps(const string str1, const string str2){
 
 bool chars_comps(const char* str1, const char* str2){
     if (*str1=='\0' && *str2=='\0') return true;
-    if (*str1=='\0' || *str2=='\0') return false;
     if (*str1==*str2) return chars_comps(str1+1, str2+1);
     return false;
 }

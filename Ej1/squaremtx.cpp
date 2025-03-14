@@ -48,7 +48,7 @@ void run_1(){
         logMessage(e.what(), __FILE__, error_line);
     }
     catch(...){
-        cout << "Unknown error" << endl;
-        logMessage("Unknown error", __FILE__, __LINE__);
+        cout << "Unexpected error" << endl;
+        logMessage("Unexpected error", __FILE__, __LINE__);
     }
 }

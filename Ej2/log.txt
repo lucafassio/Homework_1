@@ -441,23 +441,32 @@
 [ERROR] Ej2/logmsg.cpp:114 - <Invalid input recived>
 [ERROR] Ej2/logmsg.cpp:114 - <Invalid input recived>
 [ERROR] Ej2/logmsg.cpp:114 - <Invalid input recived>
-[DEBUG] <hola>
-[INFO] <hola>
-[WARNING] <hola>
+[DEBUG]
+ <hola>
+[INFO]
+ <hola>
+[WARNING]
+ <hola>
 [ERROR] chau.txt:5 - <hola>
-[CRITICAL] <hola>
+[CRITICAL]
+ <hola>
 [SECURITY] User: auti - hola
 [LAUTI] <hola>
 [NOOOOO] <siiiiiii>
 [ERROR] Ej2/logmsg.cpp:114 - <Invalid input recived>
-[DEBUG] <hola>
-[INFO] <hola>
-[WARNING] <hola>
+[DEBUG]
+ <hola>
+[INFO]
+ <hola>
+[WARNING]
+ <hola>
 [ERROR] 5:5 - <hola>
-[CRITICAL] <hola>
+[CRITICAL]
+ <hola>
 [SECURITY] User: ola - hola
 [HOLA] <hola>
-[DEBUG] <KKK>
+[DEBUG]
+ <KKK>
 [ERROR] A:4 - <KK>
 [ERROR] hola:0 - <hola>
 [ERROR] Ej2/logmsg.cpp:114 - <Invalid input recived>
@@ -466,5 +475,23 @@
 [ERROR] Ej2/logmsg.cpp:140 - <Invalid input recived>
 [ERROR] Ej2/logmsg.cpp:114 - <Invalid input recived>
 [ERROR] Ej1/squaremtx.cpp:39 - <ERROR - Invalid size.>
-[ERROR] <hola>
-[ERROR] <hola>
+[ERROR] <hola>
+[ERROR] <hola>
+hola>
+[ERROR] Ej2/logmsg.cpp:90 - <Invalid input recived>
+DEBUG <hola>
+[ERROR] Ej2/logmsg.cpp:101 - <Invalid input recived>
+DEBUG <hola>
+INFO <hola>
+WARNING <hola>
+ERROR <hola>
+[ERROR] hola.cpp:43 - <hola>
+CRITICAL <hola>
+[SECURITY] User: baury - hola
+[DEBUG] <hola>
+[INFO] <hola>
+[WARNING] <hola>
+[ERROR] <hola>
+[ERROR] hola.cpp:45 - <hola>
+[CRITICAL] <hola>
+[SECURITY] User: poli - hola

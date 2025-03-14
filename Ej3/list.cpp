@@ -121,7 +121,7 @@ void run_3(){
     int error_line;
     while (true){
         try{
-            cout << endl << "Choose an option:" << endl << "1. Push front" << endl << "2. Push back" << endl << "3. Pop front" << endl << "4. Pop back" << endl << "5. Insert" << endl << "6. Erase" << endl << "7. Print list" << endl << "8. Exit" << endl;
+            cout << endl << "Choose an option:\n1. Push front\n2. Push back\n3. Pop front\n4. Pop back\n5. Insert\n6. Erase\n7. Print list\n8. Exit" << endl;
             cout << endl << "> ";
             cin >> option;
             switch (option){
@@ -187,8 +187,8 @@ void run_3(){
             logMessage(e.what(), __FILE__, error_line);
         }
         catch (...) {
-            cout << "ERROR - Unknown error." << endl;
-            logMessage("Unknown error", __FILE__, __LINE__);
+            cout << "ERROR - Unexpected error." << endl;
+            logMessage("Unexpected error", __FILE__, __LINE__);
         }
     }
 }

@@ -14,13 +14,11 @@ int main(){
             cin >> option;
             switch (option){
                 case 1: run_1(); break;
-                case 2: 
-                    if (run_2()) cout << "Program stopped due to an error." << endl; 
-                    break;
+                case 2: if (run_2()) cout << "Program stopped due to an error." << endl; break;
                 case 3: run_3(); break;
                 case 4: run_4(); break;
                 case 5: return 0;
-                default: {error_line=__LINE__+1; throw invalid_argument("ERROR - Invalid option."); break;}
+                default: error_line=__LINE__+1; throw invalid_argument("ERROR - Invalid option."); break;
             }
         }
         catch (invalid_argument &e){
@@ -28,8 +26,8 @@ int main(){
             logMessage(e.what(), __FILE__, error_line);
         }
         catch (...){
-            cout << "Unknown error" << endl;
-            logMessage("Unknown error", __FILE__, __LINE__);
+            cout << "Unexpected error" << endl;
+            logMessage("Unexpected error", __FILE__, __LINE__);
         }
     }
     return 0;

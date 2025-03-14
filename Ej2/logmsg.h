@@ -6,14 +6,14 @@ using namespace std;
 
 typedef basic_string<char> string;
 
-bool file_exists(string nombreArchivo);
-
 void logMessage(string msg, int level);
 
 void logMessage(string msg, string file_name, int line);
 
 void logMessage(string msg, string username);
 
-string set_level(int level);
+int case_error(string msg);
 
-string add_level();
+int case_user(string msg);
+
+int run_2();

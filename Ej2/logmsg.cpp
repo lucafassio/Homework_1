@@ -1,164 +1,97 @@
 #include "logmsg.h"
 
-bool file_exists(string file_name){
-    ifstream archivo(file_name);
-    return archivo.good();
-}
-
 void logMessage(string msg, int level){
-    if (!file_exists("Ej2/log.txt")){
-        ifstream log("Ej2/log.txt"); 
-        log.close();
-    } 
+    vector<string> level_names={"[DEBUG]", "[INFO]", "[WARNING]", "[ERROR]", "[CRITICAL]", "[SECURITY]"};
     ofstream log("Ej2/log.txt", ios::app);
-    log << set_level(level) + " <" + msg + ">" << endl;
+    log << level_names[level] + " <" + msg + ">" << endl;
     log.close();
 }
 
 void logMessage(string msg, string file_name, int line){
-    if (!file_exists("Ej2/log.txt")){
-        ifstream log("Ej2/log.txt"); 
-        log.close();
-    }
     ofstream log("Ej2/log.txt", ios::app);
     log << "[ERROR] " << file_name << ":" << to_string(line) << " - <" << msg << ">" << endl;
     log.close();
 }
 
 void logMessage(string msg, string username){
-    if (!file_exists("Ej2/log.txt")){
-        ifstream log("Ej2/log.txt"); 
-        log.close();
-    }
     ofstream log("Ej2/log.txt", ios::app);
     log << "[SECURITY] User: " << username << " - " << msg << endl;
     log.close();
 }
 
-string set_level(int level){
-    ifstream levels("Ej2/levels.txt");
-    string level_str;
-    for (int i=0; i<level; i++)
-        if (!getline(levels, level_str)){
-            level_str=add_level();
-            break;
-        }
-    levels.close();
-    return level_str;
+int case_error(string msg){
+    cout << "Enter the file name (enter . to skip file snipping): ";
+    string file_name;
+    cin >> file_name;
+    if (file_name[0]=='.'){
+        logMessage(msg, 3);
+        cout << endl;
+        return 0;
+    };
+    if (cin.fail()){
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return __LINE__+1;
+    }
+    cout << "Enter the line number: ";
+    int line;
+    cin >> line;
+    if (cin.fail() || line<0){
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return __LINE__+1;
+    }
+    logMessage(msg, file_name, line);
+    return 0;
 }
 
-string add_level(){
-    string new_level;
-    cout << "Enter the new level: ";
-    cin >> new_level;
-    new_level="["+new_level+"]";
-    string comparing;
-    ifstream levels_reading("Ej2/levels.txt");
-    while (getline(levels_reading, comparing))
-        if (str_comps(comparing, new_level)){
-            cout << "ERROR - The level already exists." << endl;
-            levels_reading.close();
-            return new_level;
-        }
-    levels_reading.close();
-    ofstream levels_app("Ej2/levels.txt", ios::app);
-    levels_app << new_level << endl;
-    levels_app.close();
-    return new_level;
-}
-
-void reset_levels(){
-    ifstream old_levels("Ej2/levels.txt");
-    vector<string> lines;
-    string line;
-    int count = 0;
-    while (getline(old_levels, line) && count < 6) {
-        lines.push_back(line);
-        count++;
+int case_user(string msg){ 
+    cout << "Enter the username: ";
+    string username;
+    cin >> username;
+    if (cin.fail()){
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return __LINE__+1;
     }
-    old_levels.close();
-    ofstream new_levels("Ej2/levels.txt", ofstream::trunc);
-    for (const string &l : lines){
-        new_levels << l << endl;
-    }
-    new_levels.close();
+    logMessage(msg, username);
+    return 0;
 }
 
 int run_2(){
+    int LEVELS_QUANTITY=6;
+    enum levels {DEBUG, INFO, WARNING, ERROR, CRITICAL, SECURITY};
     cout << endl << "========== Ej 2: Log messages ==========" << endl;
     int error_line;
     try{
         while (true){
             cout << "Select the event level:" << endl;
             int num=1;
-            string option;
-            ifstream levels_file("Ej2/levels.txt");
-            if (!levels_file.is_open()){
-                error_line=__LINE__+1;
-                throw runtime_error("ERROR - File 'levels.txt' failed to open.");
-            } 
-            while (getline(levels_file, option)){
-                cout << num << ". " << option << endl;
-                num++;
-            }
-            levels_file.close();
-            cout << num << ". Add new level" << endl  << num+1 << ". Reset levels" << endl << num+2 << ". Exit" << endl << "> ";
+            cout << "1. DEBUG\n2. INFO\n3. WARNING\n4. ERROR\n5.CRITICAL\n6.SECURITY\n7. Exit" << endl << "> ";
             int level_selected;
             cin >> level_selected;
-            if (cin.fail() || level_selected>num+2){
+            if (cin.fail()){
                 cin.clear();
                 cin.ignore(10000, '\n');
                 error_line=__LINE__+1;
                 throw invalid_argument("ERROR - Invalid option.");
             }
-            if (level_selected==num) {add_level();  continue;}
-            else if (level_selected==num+1) {reset_levels(); continue;}
-            else if (level_selected==num+2) return 0;
-
             string msg;
-            cout << "Enter the message: ";
-            cin.ignore();
-            getline(cin, msg);
-
-            if (level_selected==4) {
-                cout << "Enter the file name (enter . to skip file snipping): ";
-                string file_name;
-                cin >> file_name;
-                if (file_name[0]=='.'){
-                    logMessage(msg, 4);
-                    cout << endl;
-                    continue;
-                };
-                if (cin.fail()){
-                    cin.clear();
-                    cin.ignore(10000, '\n');
-                    error_line=__LINE__+1;
-                    throw invalid_argument("ERROR - Invalid file name.");
-                }
-                cout << "Enter the line number: ";
-                int line;
-                cin >> line;
-                if (cin.fail()){
-                    cin.clear();
-                    cin.ignore(10000, '\n');
-                    error_line=__LINE__+1;
-                    throw invalid_argument("ERROR - Invalid line number.");
-                }
-                else if (line<0){
-                    error_line=__LINE__+1;
-                    throw invalid_argument("ERROR - Negative line number.");
-                }
-                
-                logMessage(msg, file_name, line);
-            } else if (level_selected==6) {
-                cout << "Enter the username: ";
-                string username;
+            if (level_selected>0 && level_selected<=LEVELS_QUANTITY){
+                cout << "Enter the message: ";
                 cin.ignore();
-                getline(cin, username);
-                logMessage(msg, username);
-            } 
-            else logMessage(msg, level_selected);
-            cout << endl;
+                getline(cin, msg);
+            }
+            switch (level_selected){
+                case 1: logMessage(msg, 0); break;
+                case 2: logMessage(msg, 1); break;
+                case 3: logMessage(msg, 2); break;
+                case 4: if (case_error(msg)) throw("ERROR - Invalid input"); break;
+                case 5: logMessage(msg, 4); break;
+                case 6: if (case_user(msg)) throw("ERROR - Invalid username"); break;
+                case 7: return 0;
+                default: error_line=__LINE__; throw invalid_argument("ERROR - Invalid option."); break;
+            }
         }
     }
     catch (runtime_error &e){
@@ -172,8 +105,8 @@ int run_2(){
         return 1;
     }
     catch (...){
-        cout << "ERROR - Unknown error." << endl;
-        logMessage("Unknown error", __FILE__, __LINE__);
+        cout << "ERROR - Unexpected error." << endl;
+        logMessage("Unexpected error", __FILE__, __LINE__);
         return 1;
     }
 }
