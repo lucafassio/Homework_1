@@ -2,150 +2,171 @@
 
 struct node{
     int value;
-    node_t *next;
+    shared_ptr<node> next;
 };
 
-struct list{
-    node_t *head;
+struct list {
+    shared_ptr<node> head;
     int size;
 };
 
+bool list_is_empty(shared_ptr<list_t> l){
+    return l->size==0;
+}
 
-node_t *create_node(int value){
-    node_t *new_node=new node_t;
+shared_ptr<node_t> create_node(int value, shared_ptr<node_t> next){
+    shared_ptr<node> new_node=make_shared<node_t>();
     new_node->value=value;
-    new_node->next=nullptr;
+    new_node->next=next;
     return new_node;
 }
 
-list_t *create_list(){
-    list_t *new_list=new list_t;
-    new_list->head=nullptr;
-    new_list->size=0;
-    return new_list;
+shared_ptr<list_t> create_list(){
+    shared_ptr<list> list=make_shared<list_t>();
+    list->head=nullptr;
+    list->size=0;
+    return list;
 }
 
-bool list_is_empty(list_t *list){
-    return list->size==0;
-}
-
-bool push_front(list_t *list, int value){
-    node_t *new_node=create_node(value);
-    if(new_node==nullptr) return false;
-    new_node->next=list->head;
-    list->head=new_node;
-    list->size++;
+bool push_front(shared_ptr<list_t> l, int value){
+    l->head=create_node(value, l->head);
+    l->size++;
     return true;
 }
 
-bool push_back(list_t *list, int value){
-    node_t *new_node=create_node(value);
-    if(new_node==nullptr) return false;
-    if(list_is_empty(list))
-        list->head=new_node;
+bool push_back(shared_ptr<list_t>  l, int value){
+    if (list_is_empty(l)) l->head=create_node(value, nullptr);
     else{
-        node_t *aux=list->head;
-        while(aux->next!=nullptr) aux=aux->next;
-        aux->next=new_node;
+        shared_ptr aux=l->head;
+        while (aux->next)
+            aux=aux->next;
+        aux->next=create_node(value, nullptr);
     }
-    list->size++;
+    l->size++;
     return true;
 }
 
-bool pop_front(list_t *list){
-    if(list_is_empty(list)) return false;
-    node_t *aux=list->head;
-    list->head=list->head->next;
-    delete aux;
-    list->size--;
+bool insert(shared_ptr<list_t>  l, int value, int pos){
+    if (pos<0){
+        cout << "Que pones un negativo pete." << endl;
+        return false;
+    }
+    if (pos==0) return push_front(l, value);
+    if (pos==l->size) return push_back(l, value);
+    if (pos>l->size){
+        cout << "Pos is higher than size. Node was inserted at the end." << endl;
+        return push_back(l, value);
+    }
+    shared_ptr aux=l->head;
+    for(int i=1; i<pos; i++)
+        aux=aux->next;
+    aux->next=create_node(value, aux->next);
+    l->size++;
     return true;
 }
 
-bool pop_back(list_t *list){
-    if(list_is_empty(list)) return false;
-    if(list->size==1){
-        delete list->head;
-        list->head=nullptr;
-    }else{
-        node_t *aux=list->head;
-        while(aux->next->next!=nullptr) aux=aux->next;
-        delete aux->next;
-        aux->next=nullptr;
-    }
-    list->size--;
+bool pop_front(shared_ptr<list_t>  l){
+    if (list_is_empty(l)) return false;
+    l->head=l->head->next;
+    l->size--;
     return true;
 }
 
-bool insert(list_t *list, int value, int pos){
-    if (!check_pos(list, pos)) return false;
-    if(pos==0) return push_front(list, value);
-    if(pos>=list->size){
-        if (pos>list->size) cout << "Appending at the end of the list." << endl;
-        return push_back(list, value);
-    }
-        node_t *new_node=create_node(value);
-    if(new_node==nullptr) return false;
-    node_t *aux=list->head;
-    for(int i=1; i<pos; i++) aux=aux->next;
-    new_node->next=aux->next;
-    aux->next=new_node;
-    list->size++;
+bool pop_back(shared_ptr<list_t>  l){
+    if (list_is_empty(l)) return false;
+    if (l->size==1) return pop_front(l);
+    shared_ptr aux=l->head;
+    while (aux->next->next)
+        aux=aux->next;
+    aux->next=nullptr;
+    l->size--;
     return true;
 }
 
-bool erase(list_t *list, int pos){
-    if (!check_pos(list, pos)) return false;
-    if(pos==0) return pop_front(list);
-    if(pos>=list->size-1){
-        if (pos>list->size-1) cout << "Deleting last element." << endl;
-        return pop_back(list);
+bool erase(shared_ptr<list_t> l, int pos){
+    if (pos<0){
+        cout << "Que pones un negativo pete." << endl;
+        return false;
     }
-    node_t *aux=list->head;
-    for(int i=1; i<pos; i++) aux=aux->next;
-    node_t *aux2=aux->next;
-    aux->next=aux2->next;
-    delete aux2;
-    list->size--;
+    if (pos==0) return pop_front(l);
+    if (pos==l->size-1) return pop_back(l);
+    if (pos>=l->size){
+        cout << "Pos is higher than size. Node was erased at the end." << endl;
+        return pop_back(l);
+    }
+    shared_ptr aux=l->head;
+    for (int i=0; i<pos-1; i++)
+        aux=aux->next;
+    aux->next=aux->next->next;
+    l->size--;
     return true;
 }
 
-bool check_pos(list_t *list, int pos){
-    try{
-        if (pos < 0) {
-            throw runtime_error("Index must be positive.");
-        } else if (pos > list->size) {
-            throw out_of_range("Index out of range. ");
-        } else {
-            return true;
-        }
-    } catch (const runtime_error& e) {
-        cout << e.what() << endl;
-    } catch (const out_of_range& e) {
-        cout << e.what();
-        return true;
-    }
-    return false;
-}
-
-void print_list(list_t *list){
-    if (list_is_empty(list)) {
-        cout << "List is empty." << endl;
-        return;
-    }
-    if (list->size==1) {
-        cout << "List: " << list->head->value << endl;
-        return;
-    }
-    node_t *aux=list->head->next;
-    cout << "List: " << list->head->value;
+void print_list(shared_ptr<list_t>  l){
+    if (list_is_empty(l)) {cout << "List is empty." << endl; return;}
+    shared_ptr aux=l->head;
+    cout << "List: " << aux->value;
+    aux=aux->next;
     do{
         cout << " -> " << aux->value;
         aux=aux->next;
-    } while(aux!=nullptr);
+    } while(aux);
     cout << endl;
 }
 
-void clear_list(list_t *list){
-    while(!list_is_empty(list)) pop_front(list);
-    delete list;
+void run_3(){
+    shared_ptr<list> list=create_list();
+    cout << endl << "========== Ej 3: List ==========" << endl;
+    int option;
+    while (true){
+        cout << endl << "Choose an option:" << endl << "1. Push front" << endl << "2. Push back" << endl << "3. Pop front" << endl << "4. Pop back" << endl << "5. Insert" << endl << "6. Erase" << endl << "7. Print list" << endl << "8. Exit" << endl;
+        cout << endl << "> ";
+        cin >> option;
+        switch (option){
+            case 1:
+                cout << "Value: ";
+                int value;
+                cin >> value;
+                push_front(list, value);
+                cout << "Value " << value << " pushed to front." << endl;
+                break;
+            case 2:
+                cout << "Value: ";
+                cin >> value;
+                push_back(list, value);
+                cout << "Value " << value << " pushed to back." << endl;
+                break;
+            case 3:
+                if (pop_front(list)) cout << "Value popped from front." << endl;
+                else cout << "List is empty." << endl;
+                break;
+            case 4:
+                if (pop_back(list)) cout << "Value popped from back." << endl;
+                else cout << "List is empty." << endl;
+                break;
+            case 5:
+                cout << "Position: ";
+                int pos;
+                cin >> pos;
+                cout << "Value: ";
+                cin >> value;
+                insert(list, value, pos);
+                cout << "Value " << value << " inserted at position " << pos << "." << endl;
+                break;
+            case 6:
+                cout << "Position: ";
+                cin >> pos;
+                erase(list, pos);
+                cout << "Value at position " << pos << " erased." << endl;
+                break;
+            case 7:
+                print_list(list);
+                break;
+            case 8:
+                return;
+            default:
+                cout << "ERROR - Invalid option." << endl;
+                break;
+        }
+    }
 }

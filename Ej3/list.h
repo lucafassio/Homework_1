@@ -1,29 +1,26 @@
 #include <iostream>
+#include <memory>
 using namespace std;
 
 typedef struct node node_t;
 typedef struct list list_t;
 
-node_t *create_node(int value);
+shared_ptr<node> create_node(int value, shared_ptr<node> next=nullptr);
 
-list_t *create_list();
+shared_ptr<list> create_list();
 
-bool list_is_empty(list_t *list);
+bool list_is_empty(shared_ptr<list> l);
 
-bool push_front(list_t *list, int value);
+bool push_front(shared_ptr<list> l, int value);
 
-bool push_back(list_t *list, int value);
+bool push_back(shared_ptr<list> l, int value);
 
-bool pop_front(list_t *list);
+bool pop_front(shared_ptr<list> l);
 
-bool pop_back(list_t *list);
+bool pop_back(shared_ptr<list> l);
 
-bool insert(list_t *list, int value, int pos);
+bool insert(shared_ptr<list> l, int value, int pos);
 
-bool erase(list_t *list, int pos);
+bool erase(shared_ptr<list> l, int pos);
 
-bool check_pos(list_t *list, int num);
-
-void print_list(list_t *list);
-
-void clear_list(list_t *list);
+void print_list(shared_ptr<list> l);

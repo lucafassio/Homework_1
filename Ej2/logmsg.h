@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "../Ej4/stringcomps.h"
 using namespace std;
 
 typedef basic_string<char> string;
 
-bool file_exists(const string& nombreArchivo);
+bool file_exists(string nombreArchivo);
 
 void logMessage(string msg, int level);
 
