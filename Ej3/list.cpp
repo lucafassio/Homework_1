@@ -34,7 +34,7 @@ bool push_front(shared_ptr<list_t> l, int value){
     return true;
 }
 
-bool push_back(shared_ptr<list_t>  l, int value){
+bool push_back(shared_ptr<list_t> l, int value){
     if (list_is_empty(l)) l->head=create_node(value, nullptr);
     else{
         shared_ptr aux=l->head;
@@ -48,7 +48,7 @@ bool push_back(shared_ptr<list_t>  l, int value){
 
 bool insert(shared_ptr<list_t>  l, int value, int pos){
     if (pos<0){
-        cout << "Que pones un negativo pete." << endl;
+        cout << "Invalid pos." << endl;
         return false;
     }
     if (pos==0) return push_front(l, value);
@@ -85,7 +85,7 @@ bool pop_back(shared_ptr<list_t>  l){
 
 bool erase(shared_ptr<list_t> l, int pos){
     if (pos<0){
-        cout << "Que pones un negativo pete." << endl;
+        cout << "Invalid pos." << endl;
         return false;
     }
     if (pos==0) return pop_front(l);
@@ -118,55 +118,77 @@ void run_3(){
     shared_ptr<list> list=create_list();
     cout << endl << "========== Ej 3: List ==========" << endl;
     int option;
+    int error_line;
     while (true){
-        cout << endl << "Choose an option:" << endl << "1. Push front" << endl << "2. Push back" << endl << "3. Pop front" << endl << "4. Pop back" << endl << "5. Insert" << endl << "6. Erase" << endl << "7. Print list" << endl << "8. Exit" << endl;
-        cout << endl << "> ";
-        cin >> option;
-        switch (option){
-            case 1:
-                cout << "Value: ";
-                int value;
-                cin >> value;
-                push_front(list, value);
-                cout << "Value " << value << " pushed to front." << endl;
-                break;
-            case 2:
-                cout << "Value: ";
-                cin >> value;
-                push_back(list, value);
-                cout << "Value " << value << " pushed to back." << endl;
-                break;
-            case 3:
-                if (pop_front(list)) cout << "Value popped from front." << endl;
-                else cout << "List is empty." << endl;
-                break;
-            case 4:
-                if (pop_back(list)) cout << "Value popped from back." << endl;
-                else cout << "List is empty." << endl;
-                break;
-            case 5:
-                cout << "Position: ";
-                int pos;
-                cin >> pos;
-                cout << "Value: ";
-                cin >> value;
-                insert(list, value, pos);
-                cout << "Value " << value << " inserted at position " << pos << "." << endl;
-                break;
-            case 6:
-                cout << "Position: ";
-                cin >> pos;
-                erase(list, pos);
-                cout << "Value at position " << pos << " erased." << endl;
-                break;
-            case 7:
-                print_list(list);
-                break;
-            case 8:
-                return;
-            default:
-                cout << "ERROR - Invalid option." << endl;
-                break;
+        try{
+            cout << endl << "Choose an option:" << endl << "1. Push front" << endl << "2. Push back" << endl << "3. Pop front" << endl << "4. Pop back" << endl << "5. Insert" << endl << "6. Erase" << endl << "7. Print list" << endl << "8. Exit" << endl;
+            cout << endl << "> ";
+            cin >> option;
+            switch (option){
+                case 1:
+                    cout << "Value: ";
+                    int value;
+                    cin >> value;
+                    push_front(list, value);
+                    cout << "Value " << value << " was pushed to front." << endl;
+                    break;
+                case 2:
+                    cout << "Value: ";
+                    cin >> value;
+                    push_back(list, value);
+                    cout << "Value was " << value << " pushed to back." << endl;
+                    break;
+                case 3:
+                    if (pop_front(list)) cout << "Value was popped from front." << endl;
+                    else cout << "List is empty." << endl;
+                    break;
+                case 4:
+                    if (pop_back(list)) cout << "Value was popped from back." << endl;
+                    else cout << "List is empty." << endl;
+                    break;
+                case 5:
+                    cout << "Position: ";
+                    int pos;
+                    cin >> pos;
+                    if (pos<0){
+                        error_line=__LINE__+1;
+                        throw invalid_argument("ERROR - Negative position.");
+                    } 
+                    cout << "Value: ";
+                    cin >> value;
+                    insert(list, value, pos);
+                    if (pos>list->size) pos=list->size;
+                    cout << "Value " << value << " was inserted at position " << pos << "." << endl;
+                    break;
+                case 6:
+                    cout << "Position: ";
+                    cin >> pos;
+                    if (pos<0) {
+                        error_line=__LINE__+1;
+                        throw invalid_argument("ERROR - Negative position.");
+                    } 
+                    erase(list, pos);
+                    if (pos>list->size) pos=list->size;
+                    cout << "Value at position " << pos << " was erased." << endl;
+                    break;
+                case 7:
+                    print_list(list);
+                    break;
+                case 8:
+                    return;
+                default:
+                    error_line=__LINE__+1;
+                    throw invalid_argument("ERROR - Invalid option.");
+                    break;
+            }
+        }
+        catch (invalid_argument &e){
+            cout << e.what() << endl;
+            logMessage(e.what(), __FILE__, error_line);
+        }
+        catch (...) {
+            cout << "ERROR - Unknown error." << endl;
+            logMessage("Unknown error", __FILE__, __LINE__);
         }
     }
 }

@@ -1,44 +1,56 @@
 #include "stringcomps.h"
 
-bool char_comps(const char *str1, const char *str2){
-    if (*str1=='\0' && *str2=='\0') return true;
-    if (*str1=='\0' || *str2=='\0') return false;
-    if (*str1==*str2) return char_comps(str1+1, str2+1);
+bool str_comps(const string str1, const string str2){
+    if (str1[0]=='\0' && str2[0]=='\0') return true;
+    if (str1[0]==str2[0]) return str_comps(str1.substr(1), str2.substr(1));
     return false;
 }
 
-bool str_comps(const string& str1, const string& str2){
-    return char_comps(str1.c_str(), str2.c_str());
+bool chars_comps(const char* str1, const char* str2){
+    if (*str1=='\0' && *str2=='\0') return true;
+    if (*str1=='\0' || *str2=='\0') return false;
+    if (*str1==*str2) return chars_comps(str1+1, str2+1);
+    return false;
 }
 
-constexpr bool const_char_comps(const char* str1, const char* str2){
-    // if (*str1 == '\0' && *str2 == '\0') return true;
-    // if (*str1 == '\0' || *str2 == '\0') return false;
-    // if (*str1==*str2) return char_comps(str1+1, str2+1);
-    // return false;
-
-    return (*str1 == '\0' && *str2 == '\0') ? true  // Ambos vacíos -> iguales
-           : (*str1 == '\0' || *str2 == '\0') ? false // Uno vacío y otro no -> distintos
-           : (*str1 == *str2) ? const_char_comps(str1 + 1, str2 + 1) // Comparar el siguiente char
-           : false; // Si hay diferencia, retorna false
+constexpr bool const_chars_comps(const char *str1, const char *str2){
+    if (*str1=='\0' && *str2=='\0') return true;
+    if (*str1==*str2) return const_chars_comps(str1+1, str2+1);
+    return false;
 }
 
-void comp_time(){
-    static_assert(const_char_comps("hola", "hola"), "Error: No son iguales");
-    static_assert(!const_char_comps("hola", "mundo"), "Error: No debería ser igual");
+void run_4(){
+    cout << endl << "========== Ej 4: String comparisons ==========" << endl;
+    cout << "Comparing two strings, 507 characters each." << endl;
 
+    string str1="Lorem ipsum dolor sit amet consectetur adipiscing elit, viverra senectus primis felis sagittis tristique, aliquam duis luctus arcu nibh facilisis. Ultrices nisi tincidunt ante nam gravida scelerisque quam phasellus curae augue eu inceptos lacus habitant, venenatis vel himenaeos varius parturient lectus rutrum mus pretium diam morbi purus. Pellentesque risus commodo dignissim bibendum venenatis ullamcorper fermentum, suspendisse pharetra rutrum dis et ultricies, sollicitudin dictum congue in ac integer.";
+    string str2="Lorem ipsum dolor sit amet consectetur adipiscing elit, viverra senectus primis felis sagittis tristique, aliquam duis luctus arcu nibh facilisis. Ultrices nisi tincidunt ante nam gravida scelerisque quam phasellus curae augue eu inceptos lacus habitant, venenatis vel himenaeos varius parturient lectus rutrum mus pretium diam morbi purus. Pellentesque risus commodo dignissim bibendum venenatis ullamcorper fermentum, suspendisse pharetra rutrum dis et ultricies, sollicitudin dictum congue in ac integer.";
 
+    char* chars1 = new char[str1.length()+1];
+    char* chars2 = new char[str2.length()+1];
+
+    str1.copy(chars1, str1.length());
+    str2.copy(chars2, str2.length());
+    chars1[str1.length()] = '\0';
+    chars2[str2.length()] = '\0';
+    
     auto startTime = chrono::high_resolution_clock::now();
-    char_comps("Según datos del Banco Central de la República Argentina (BCRA), alrededor del 60e los egresos por Viajes, pasajes y otros pagos con tarjeta son cancelados directamente por los clientes con fondos propios en moneda extranjera, lo que reduce el impacto deficitario de estos consumos en el mercado de cambios y en las reservas internacionales.", "Según datos del Banco Central de la República Argentina (BCRA), alrededor del 60e los egresos por Viajes, pasajes y otros pagos con tarjeta son cancelados directamente por los clientes con fondos propios en moneda extranjera, lo que reduce el impacto deficitario de estos consumos en el mercado de cambios y en las reservas internacionalas.");
+    chars_comps(chars1, chars2);
     auto endTime = chrono::high_resolution_clock::now();
     auto elapsedTime = chrono::duration_cast<chrono::nanoseconds>(
     endTime - startTime);
-    cout << "A char_comps le tomo: " << elapsedTime.count() << " nanosegundos" << endl;
+    cout << "Runtime: " << elapsedTime.count() << " nanoseconds." << endl;
+
+    delete[] chars1;
+    delete[] chars2;
+
+    constexpr const char* const_char1="Lorem ipsum dolor sit amet consectetur adipiscing elit, viverra senectus primis felis sagittis tristique, aliquam duis luctus arcu nibh facilisis. Ultrices nisi tincidunt ante nam gravida scelerisque quam phasellus curae augue eu inceptos lacus habitant, venenatis vel himenaeos varius parturient lectus rutrum mus pretium diam morbi purus. Pellentesque risus commodo dignissim bibendum venenatis ullamcorper fermentum, suspendisse pharetra rutrum dis et ultricies, sollicitudin dictum congue in ac integer.";
+    constexpr const char* const_char2="Lorem ipsum dolor sit amet consectetur adipiscing elit, viverra senectus primis felis sagittis tristique, aliquam duis luctus arcu nibh facilisis. Ultrices nisi tincidunt ante nam gravida scelerisque quam phasellus curae augue eu inceptos lacus habitant, venenatis vel himenaeos varius parturient lectus rutrum mus pretium diam morbi purus. Pellentesque risus commodo dignissim bibendum venenatis ullamcorper fermentum, suspendisse pharetra rutrum dis et ultricies, sollicitudin dictum congue in ac integer.";
 
     startTime = chrono::high_resolution_clock::now();
-    const_char_comps("Según datos del Banco Central de la República Argentina (BCRA), alrededor del 60e los egresos por Viajes, pasajes y otros pagos con tarjeta son cancelados directamente por los clientes con fondos propios en moneda extranjera, lo que reduce el impacto deficitario de estos consumos en el mercado de cambios y en las reservas internacionales.", "Según datos del Banco Central de la República Argentina (BCRA), alrededor del 60e los egresos por Viajes, pasajes y otros pagos con tarjeta son cancelados directamente por los clientes con fondos propios en moneda extranjera, lo que reduce el impacto deficitario de estos consumos en el mercado de cambios y en las reservas internacionalas.");
+    constexpr bool const_result=const_chars_comps(const_char1, const_char2);
     endTime = chrono::high_resolution_clock::now();
     elapsedTime = chrono::duration_cast<chrono::nanoseconds>(
     endTime - startTime);
-    cout << "A const_char_comps le tomo: " << elapsedTime.count() << " nanosegundos" << endl;
+    cout << "Compilation time: " << elapsedTime.count() << " nanoseconds." << endl;
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include "../Ej2/logmsg.h"
 using namespace std;
 
 typedef struct node node_t;

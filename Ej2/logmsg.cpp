@@ -1,7 +1,5 @@
 #include "logmsg.h"
 
-int error_line;
-
 bool file_exists(string file_name){
     ifstream archivo(file_name);
     return archivo.good();
@@ -88,7 +86,7 @@ void reset_levels(){
 
 int run_2(){
     cout << endl << "========== Ej 2: Log messages ==========" << endl;
-    
+    int error_line;
     try{
         while (true){
             cout << "Select the event level:" << endl;
@@ -123,16 +121,34 @@ int run_2(){
             getline(cin, msg);
 
             if (level_selected==4) {
-                cout << "Enter the file name: ";
+                cout << "Enter the file name (enter . to skip file snipping): ";
                 string file_name;
                 cin >> file_name;
+                if (file_name[0]=='.'){
+                    logMessage(msg, 4);
+                    cout << endl;
+                    continue;
+                };
+                if (cin.fail()){
+                    cin.clear();
+                    cin.ignore(10000, '\n');
+                    error_line=__LINE__+1;
+                    throw invalid_argument("ERROR - Invalid file name.");
+                }
                 cout << "Enter the line number: ";
                 int line;
                 cin >> line;
-                if (line<0){
+                if (cin.fail()){
+                    cin.clear();
+                    cin.ignore(10000, '\n');
                     error_line=__LINE__+1;
                     throw invalid_argument("ERROR - Invalid line number.");
                 }
+                else if (line<0){
+                    error_line=__LINE__+1;
+                    throw invalid_argument("ERROR - Negative line number.");
+                }
+                
                 logMessage(msg, file_name, line);
             } else if (level_selected==6) {
                 cout << "Enter the username: ";
@@ -157,7 +173,7 @@ int run_2(){
     }
     catch (...){
         cout << "ERROR - Unknown error." << endl;
-        logMessage("Unknown error", __FILE__, -1);
+        logMessage("Unknown error", __FILE__, __LINE__);
         return 1;
     }
 }

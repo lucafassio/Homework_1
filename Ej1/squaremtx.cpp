@@ -28,12 +28,27 @@ void print_mtx(vector<vector<int>> mtx, int size){
 }
 
 void run_1(){
+    int error_line;
     cout << endl << "========== Ej 1: Square matrix ==========" << endl;
-    cout << "Matrix size: ";
-    int size;
-    cin >> size;
-    cout << "Creating " << size << "x" << size << " matrix..." << endl;
-    vector<vector<int>> mtx=create_mtx(size);
-    cout << "Matrix created." << endl << endl;
-    print_mtx(mtx, size);
+    try {
+        cout << "Matrix size: ";
+        int size;
+        cin >> size;
+        if (cin.fail() || size<1) {
+            error_line=__LINE__+1;
+            throw invalid_argument("ERROR - Invalid size.");
+        }
+        cout << "Creating " << size << "x" << size << " matrix..." << endl;
+        vector<vector<int>> mtx=create_mtx(size);
+        cout << "Matrix created." << endl << endl;
+        print_mtx(mtx, size);
+    }
+    catch (invalid_argument &e){
+        cout << e.what() << endl;
+        logMessage(e.what(), __FILE__, error_line);
+    }
+    catch(...){
+        cout << "Unknown error" << endl;
+        logMessage("Unknown error", __FILE__, __LINE__);
+    }
 }
