@@ -140,10 +140,10 @@ void print_list(shared_ptr<list_t>  l){
     shared_ptr aux=l->head;
     cout << "List: " << aux->value;
     aux=aux->next;
-    do{
+    while(aux){
         cout << " -> " << aux->value;
         aux=aux->next;
-    } while(aux);
+    }
     cout << endl;
 }
 

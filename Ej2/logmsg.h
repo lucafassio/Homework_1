@@ -8,7 +8,7 @@
 using namespace std;
 
 enum levels {
-    DEBUG=1,
+    DEBUG=0,
     INFO, 
     WARNING, 
     ERROR, 
@@ -33,8 +33,6 @@ void logMessage(string msg, levels level);
 void logMessage(string msg, string file_name, int line);
 
 void logMessage(string msg, string username);
-
-bool has_space(string str);
 
 int case_error(string msg);
 
