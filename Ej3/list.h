@@ -1,6 +1,9 @@
+#ifndef LIST_H
+#define LIST_H
+
+#include "../Ej2/logmsg.h"
 #include <iostream>
 #include <memory>
-#include "../Ej2/logmsg.h"
 using namespace std;
 
 typedef struct node node_t;
@@ -25,3 +28,7 @@ bool insert(shared_ptr<list> l, int value, int pos);
 bool erase(shared_ptr<list> l, int pos);
 
 void print_list(shared_ptr<list> l);
+
+void run_3();
+
+#endif // LIST_H

@@ -3,6 +3,9 @@
 #include "Ej3/list.cpp"
 #include "Ej4/stringcomps.cpp"
 
+#include <iostream>
+using namespace std;
+
 int main(){
     int error_line;
     int option;
